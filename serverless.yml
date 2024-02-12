@@ -6,6 +6,13 @@ provider:
   runtime: nodejs18.x
   stage: dev
   region: us-west-1
+  iam:
+    roleStatements:
+      - Effect: Allow
+        Action: dynamodb:*
+        Resource:
+          - !GetAtt bookTable.Arn
+          - !GetAtt userTable.Arn
 
 functions:
   checkInventory:

@@ -11,7 +11,7 @@ module.exports.checkInventory = async ({bookId, quantity}) => {
   try {
     let params = {
       TableName: 'bookTable',
-      KeyCondigionExpression: 'bookId = :bookId',
+      KeyConditionExpression: 'bookId = :bookId',
       ExpressionAttributeValues: {
         ':bookId': bookId
       }
