@@ -7,12 +7,14 @@ provider:
   stage: dev
   region: us-west-1
   iam:
-    roleStatements:
-      - Effect: Allow
-        Action: dynamodb:*
-        Resource:
-          - !GetAtt bookTable.Arn
-          - !GetAtt userTable.Arn
+    role:
+      statements:
+        - Effect: Allow
+          Action: dynamodb:*
+          Resource: !GetAtt bookTable.Arn
+        - Effect: Allow
+          Action: dynamodb:*
+          Resource: !GetAtt userTable.Arn
 
 functions:
   checkInventory:
