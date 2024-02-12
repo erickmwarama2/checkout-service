@@ -44,6 +44,17 @@ resources:
         KeySchema:
           - AttributeName: bookId
             KeyType: HASH
+    userTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        BillingMode: PAY_PER_REQUEST
+        TableName: userTable
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
 
 plugins:
   - serverless-step-functions
