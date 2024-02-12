@@ -11,5 +11,8 @@
   "license": "ISC",
   "devDependencies": {
     "serverless-step-functions": "^3.19.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1555.0"
   }
 }

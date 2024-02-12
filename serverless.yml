@@ -24,11 +24,24 @@ stepFunctions:
             Type: Task
             Resource:
               Fn::GetAtt: [checkInventory, Arn]
+            Catch:
+              - ErrorEquals: [BookNotFound]
+                Next: BookNotFoundError
+              - ErrorEquals: [BookOutOfStock]
+                Next: BookOutOfStockError
             Next: calculateTotal
           calculateTotal:
             Type: Task
             Resource:
               Fn::GetAtt: [calculateTotal, Arn]
+            End: true
+          BookNotFoundError:
+            Type: Pass
+            Result: "No such book is available"
+            End: true
+          BookOutOfStockError:
+            Type: Pass
+            Result: "Sorry, the book is out of stock"
             End: true
 
 resources:
