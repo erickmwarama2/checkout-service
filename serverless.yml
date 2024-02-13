@@ -27,6 +27,14 @@ functions:
     handler: handler.billCustomer
   restoreRedeemPoints:
     handler: handler.restoreRedeemPoints
+  restoreQuantity:
+    handler: handler.restoreQuantity
+  sqsWorker:
+    handler: handler.sqsWorker
+    events:
+      - sqs:
+          arn: !GetAtt orderQueue.Arn
+          batchSize: 1
 
 stepFunctions:
   stateMachines:
@@ -83,7 +91,34 @@ stepFunctions:
             Next: PrepareOrder
           PrepareOrder:
             Type: Task
-
+            Resource: arn:aws:states:::sqs:sendMessage.waitForTaskToken
+            Parameters:
+              QueueUrl: !GetAtt orderQueue.QueueUrl
+              MessageBody:
+                Input.$: "$"
+                Token.$: "$$.Task.Token"
+            ResultPath: "$.courierStatus"
+            Catch:
+              - ErrorEquals: [NoCourierAvailable]
+                ResultPath: "$.courierError"
+                Next: RefundCustomer
+            Next: DispatchOrder
+          DispatchOrder:
+            Type: Pass
+            Result: "Order is dispatched"
+            ResultPath: "$.dispatchStatus"
+            End: true
+          RefundCustomer:
+            Type: Pass
+            Result: "Customer is refunded"
+            ResultPath: "$.refundStatus"
+            Next: RestoreQuantity
+          RestoreQuantity:
+            Type: Task
+            Resource:
+              Fn::GetAtt: [restoreQuantity, Arn]
+            ResultPath: "$.quantityRestoreStatus"
+            Next: RestoreRedeemPoints
           BookNotFoundError:
             Type: Pass
             Result: "No such book is available"
