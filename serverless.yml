@@ -38,11 +38,42 @@ stepFunctions:
                 Next: BookNotFoundError
               - ErrorEquals: [BookOutOfStock]
                 Next: BookOutOfStockError
+            ResultPath: "$.book"
             Next: calculateTotal
           calculateTotal:
             Type: Task
             Resource:
               Fn::GetAtt: [calculateTotal, Arn]
+            ResultPath: "$.total"
+            End: isRedeemNeeded
+          isRedeemNeeded:
+            Type: Choice
+            Choices:
+              - Variable: $.redeem
+                BooleanEquals: true
+                Next: RedeemPoints
+            Default: BillCustomer
+          RedeemPoints:
+            Type: Task
+            Resource:
+              Fn::GetAtt: [redeemPoints, Arn]
+            ResultPath: "$.total"
+            Catch:
+              - ErrorEquals: [States.ALL]
+              Next: RedeemPointsError
+            Next: BillCustomer
+          BillCustomer:
+            Type: Task
+            Resource:
+              Fn::GetAtt: [billCustomer, Arn]
+            ResultPath: "$.billingStatus"
+            Retry:
+              - ErrorEquals: [States.ALL]
+                MaxAttempts: 3
+            Catch:
+              - ErrorEquals: [States.ALL]
+                ResultPath: "$.customerBilling"
+                Next: BillingError
             End: true
           BookNotFoundError:
             Type: Pass
@@ -51,6 +82,20 @@ stepFunctions:
           BookOutOfStockError:
             Type: Pass
             Result: "Sorry, the book is out of stock"
+            End: true
+          RedeemPointsError:
+            Type: Pass
+            Result: "You do not have sufficient points"
+            End: true
+          BillingError:
+            Type: Pass
+            Result: "Could not process payment"
+            ResultPath: "$.billingStatus"
+            Next: RestoreRedeemPoints
+          RestoreRedeemPoints:
+            Type: Task
+            Resource:
+              Fn::GetAtt: [restoreRedeemPoints, Arn]
             End: true
 
 resources:
