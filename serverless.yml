@@ -15,6 +15,9 @@ provider:
         - Effect: Allow
           Action: dynamodb:*
           Resource: !GetAtt userTable.Arn
+        - Effect: Allow
+          Action: sqs:*
+          Resource: !GetAtt orderQueue.Arn
 
 functions:
   checkInventory:
@@ -155,15 +158,14 @@ resources:
       Type: AWS::SQS::QueuePolicy
       Properties:
         Queues:
-          - !Ref orderQueue
+          - Ref: orderQueue
         PolicyDocument:
           Statement:
-            - Action:
-              - 'SQS:SendMessage'
+            - Action: SQS:SendMessage
               Effect: Allow
               Resource: !GetAtt orderQueue.Arn
               Principal:
-                Service: "stepfunctions.amazonaws.com"
+                Service: stepfunctions.amazonaws.com
 
     bookTable:
       Type: AWS::DynamoDB::Table
