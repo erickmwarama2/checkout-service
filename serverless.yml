@@ -165,7 +165,7 @@ resources:
               Effect: Allow
               Resource: !GetAtt orderQueue.Arn
               Principal:
-                Service: stepfunctions.amazonaws.com
+                Service: states.amazonaws.com
 
     bookTable:
       Type: AWS::DynamoDB::Table
