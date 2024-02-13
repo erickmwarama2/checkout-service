@@ -21,6 +21,12 @@ functions:
     handler: handler.checkInventory
   calculateTotal:
     handler: handler.calculateTotal
+  redeemPoints:
+    handler: handler.redeemPoints
+  billCustomer:
+    handler: handler.billCustomer
+  restoreRedeemPoints:
+    handler: handler.restoreRedeemPoints
 
 stepFunctions:
   stateMachines:
