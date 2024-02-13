@@ -80,7 +80,10 @@ stepFunctions:
               - ErrorEquals: [States.ALL]
                 ResultPath: "$.customerBilling"
                 Next: BillingError
-            End: true
+            Next: PrepareOrder
+          PrepareOrder:
+            Type: Task
+
           BookNotFoundError:
             Type: Pass
             Result: "No such book is available"
@@ -106,6 +109,27 @@ stepFunctions:
 
 resources:
   Resources:
+    orderQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: orderQueue.fifo
+        FifoQueue: true
+        VisibilityTimeout: 30
+
+    orderQueuePolicy:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        Queues:
+          - !Ref orderQueue
+        PolicyDocument:
+          Statement:
+            - Action:
+              - 'SQS:SendMessage'
+              Effect: Allow
+              Resource: !GetAtt orderQueue.Arn
+              Principal:
+                Service: "stepfunctions.amazonaws.com"
+
     bookTable:
       Type: AWS::DynamoDB::Table
       Properties:
