@@ -51,7 +51,7 @@ stepFunctions:
             Resource:
               Fn::GetAtt: [calculateTotal, Arn]
             ResultPath: "$.total"
-            End: isRedeemNeeded
+            Next: isRedeemNeeded
           isRedeemNeeded:
             Type: Choice
             Choices:
