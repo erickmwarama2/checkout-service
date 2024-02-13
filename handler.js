@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-const StepFunction = AWS.StepFunctions();
+const StepFunction = new AWS.StepFunctions();
 const DynamoDB = require('aws-sdk/clients/dynamodb');
 const DocumentClient = new DynamoDB.DocumentClient({ region: process.env.AWS_REGION });
 
