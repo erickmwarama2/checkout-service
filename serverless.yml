@@ -60,7 +60,7 @@ stepFunctions:
             ResultPath: "$.total"
             Catch:
               - ErrorEquals: [States.ALL]
-              Next: RedeemPointsError
+                Next: RedeemPointsError
             Next: BillCustomer
           BillCustomer:
             Type: Task
