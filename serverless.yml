@@ -107,9 +107,15 @@ stepFunctions:
                 Next: RefundCustomer
             Next: DispatchOrder
           DispatchOrder:
+            Type: Task
+            Resource: arn:aws:states:::sns:publish
+            Parameters:
+              TopicArn: !GetAtt notifyCourierTopic.TopicArn
+              Message.$: "$"
+            Next: Dispatched
+          Dispatched:
             Type: Pass
-            Result: "Order is dispatched"
-            ResultPath: "$.dispatchStatus"
+            Result: "Your order will be dispatched in 24 hours"
             End: true
           RefundCustomer:
             Type: Pass
@@ -166,6 +172,12 @@ resources:
               Resource: !GetAtt orderQueue.Arn
               Principal:
                 Service: states.amazonaws.com
+
+    notifyCourierTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: notifyCourier
+        DisplayName: notifyCourier
 
     bookTable:
       Type: AWS::DynamoDB::Table
