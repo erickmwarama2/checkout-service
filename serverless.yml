@@ -23,7 +23,7 @@ provider:
           Resource: !GetAtt notifyCourierTopic.TopicArn
         - Effect: Allow
           Action: states:*
-          Resource: !ImportValue MyStateMachineArn
+          Resource: !ImportValue storeCheckoutFlowArn
 
 functions:
   checkInventory:
@@ -212,11 +212,10 @@ resources:
             KeyType: HASH
 
   Outputs:
-    MyStateMachine:
-      Value:
-        Ref: storeCheckoutFlow
+    storeCheckoutFlowArn:
+      Value: !GetAtt storeCheckoutFlow.Arn
       Export:
-        Name: MyStateMachineArn
+        Name: storeCheckoutFlowArn
 
 plugins:
   - serverless-step-functions
