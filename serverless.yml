@@ -86,7 +86,7 @@ stepFunctions:
             Type: Task
             Resource:
               Fn::GetAtt: [billCustomer, Arn]
-            ResultPath: "$.billingStatus"
+            ResultPath: "$.MessageGroupId"
             Retry:
               - ErrorEquals: [States.ALL]
                 MaxAttempts: 3
@@ -163,6 +163,8 @@ resources:
         FifoQueue: true
         VisibilityTimeout: 30
         ContentBasedDeduplication: true
+        DeduplicationScope: messageGroup
+        FifoThroughputLimit: perMessageGroupId
 
     orderQueuePolicy:
       Type: AWS::SQS::QueuePolicy

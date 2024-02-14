@@ -115,7 +115,7 @@ const deductPoints = async (userId) => {
 }
 
 module.exports.billCustomer = async (params) => {
-  return "Succesfully billed";
+  return (1 + Math.random() * 100000);
 };
 
 module.exports.restoreRedeemPoints = async ({ userId, total }) => {
