@@ -23,7 +23,7 @@ provider:
           Resource: !GetAtt notifyCourierTopic.TopicArn
         - Effect: Allow
           Action: states:*
-          Resource: ${self:resources.Outputs.storeCheckoutFlow.Value}
+          Resource: !ImportValue MyStateMachineArn
 
 functions:
   checkInventory:
@@ -210,10 +210,13 @@ resources:
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
+
   Outputs:
     MyStateMachine:
       Value:
         Ref: storeCheckoutFlow
+      Export:
+        Name: MyStateMachineArn
 
 plugins:
   - serverless-step-functions
