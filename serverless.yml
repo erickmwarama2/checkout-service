@@ -97,12 +97,11 @@ stepFunctions:
             Next: PrepareOrder
           PrepareOrder:
             Type: Task
-            Resource: arn:aws:states:::sqs:sendMessage.waitForTaskToken
+            Resource: arn:aws:states:::sqs:sendMessage
             Parameters:
               QueueUrl: !GetAtt orderQueue.QueueUrl
               MessageBody:
                 Input.$: "$"
-                Token.$: "$$.Task.Token"
               MessageGroupId: my-message-group
             ResultPath: "$.courierStatus"
             Catch:
