@@ -18,6 +18,12 @@ provider:
         - Effect: Allow
           Action: sqs:*
           Resource: !GetAtt orderQueue.Arn
+        - Effect: Allow
+          Action: sns:*
+          Resource: !GetAtt notifyCourierTopic.TopicArn
+        - Effect: Allow
+          Action: states:*
+          Resource: ${self:resources.Outputs.storeCheckoutFlow.Value}
 
 functions:
   checkInventory:
@@ -204,6 +210,10 @@ resources:
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
+  Outputs:
+    MyStateMachine:
+      Value:
+        Ref: storeCheckoutFlow
 
 plugins:
   - serverless-step-functions
