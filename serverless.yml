@@ -103,6 +103,7 @@ stepFunctions:
               MessageBody:
                 Input.$: "$"
                 Token.$: "$$.Task.Token"
+              MessageGroupId: my-message-group
             ResultPath: "$.courierStatus"
             Catch:
               - ErrorEquals: [NoCourierAvailable]
