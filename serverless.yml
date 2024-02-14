@@ -21,9 +21,6 @@ provider:
         - Effect: Allow
           Action: sns:*
           Resource: !GetAtt notifyCourierTopic.TopicArn
-        - Effect: Allow
-          Action: states:*
-          Resource: !ImportValue storeCheckoutFlowArn
 
 functions:
   checkInventory:
@@ -210,12 +207,6 @@ resources:
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
-
-  Outputs:
-    storeCheckoutFlowArn:
-      Value: !GetAtt storeCheckoutFlow.Arn
-      Export:
-        Name: storeCheckoutFlowArn
 
 plugins:
   - serverless-step-functions
