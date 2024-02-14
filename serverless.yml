@@ -178,6 +178,9 @@ resources:
       Properties:
         TopicName: notifyCourier
         DisplayName: notifyCourier
+        Subscription:
+          - Endpoint: pitchtechnologieskenya@gmail.com
+            Protocol: email
 
     bookTable:
       Type: AWS::DynamoDB::Table
