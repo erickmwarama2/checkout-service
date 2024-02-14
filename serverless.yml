@@ -162,6 +162,7 @@ resources:
         QueueName: orderQueue.fifo
         FifoQueue: true
         VisibilityTimeout: 30
+        ContentBasedDeduplication: true
 
     orderQueuePolicy:
       Type: AWS::SQS::QueuePolicy
