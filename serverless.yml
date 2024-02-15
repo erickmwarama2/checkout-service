@@ -21,10 +21,6 @@ provider:
         - Effect: Allow
           Action: sns:*
           Resource: !GetAtt notifyCourierTopic.TopicArn
-        - Effect: Allow
-          Action: states:*
-          Resource:
-            Fn::GetAtt: [storeCheckoutFlow, Arn]
 
 functions:
   checkInventory:
